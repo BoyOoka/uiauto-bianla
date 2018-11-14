@@ -8,7 +8,7 @@ def wait_click(d,selector,text):
     if(selector == "text"):
         if (d(text=text).wait(3)):
             d(text=text).click()
-def wait_sendkeys(d,reId,keys):
-
-    if(d(resourceId=reId).wait(3)):
-        d(resourceId=reId).send_keys(keys)
+def wait_sendkeys(d,selector,text,keys):
+    if(selector == "id"):
+        if(d(resourceId=text).wait(3)):
+            d(resourceId=text).set_text(keys)

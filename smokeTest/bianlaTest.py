@@ -17,19 +17,30 @@ class bianlaTest(unittest.TestCase):
         self.d.swipe(552, 1771, 552, 950, 0.3)
         self.d.app_start("com.bianla.app")
         if(self.d(resourceId="com.bianla.app:id/btn_register_login").wait(3)):
-           wait_click(self.d,"id", "com.bianla.app:id/btn_register_login")
-           wait_click(self.d,"id", "com.bianla.app:id/tv_login")
-           wait_sendkeys(self.d,"com.bianla.app:id/login_account_et","10000000960")
-           wait_sendkeys(self.d, "com.bianla.app:id/login_password_et", "123456")
-           wait_click(self.d, "com.bianla.app:id/login")
+           wait_click(self.d, "id", "com.bianla.app:id/btn_register_login")
+           wait_click(self.d, "id", "com.bianla.app:id/tv_login")
+           wait_sendkeys(self.d, "id", "com.bianla.app:id/login_account_et", "10000000960")
+           wait_sendkeys(self.d, "id", "com.bianla.app:id/login_password_et", "123456")
+           wait_click(self.d, "id", "com.bianla.app:id/login")
     @classmethod
     def tearDownClass(self):
         pass
-        # self.d.app_stop("com.bianla.app")
+        self.d.app_stop("com.bianla.app")
 
     def visitor_01_add(self):
         wait_click(self.d,"id", "com.bianla.app:id/iv_user")
         wait_click(self.d,"text", "添加访客")
+        self.d(resourceId="com.bianla.app:id/et_nick").set_text("1")
+        wait_sendkeys(self.d,"id", "com.bianla.app:id/et_nick","auto访客女")
+        wait_sendkeys(self.d, "id", "com.bianla.app:id/age_tv", "34")
+        wait_click(self.d, "id", "com.bianla.app:id/height")
+        wait_click(self.d, "id", "com.bianla.app:id/confirm")
+        wait_sendkeys(self.d, "id", "com.bianla.app:id/phone","13281549858")
+        self.d.press("back")
+        wait_click(self.d, "id", "com.bianla.app:id/signup_commit")
+        self.d.toast.get_message(5.0,1,"添加访客成功")
+        self.d.toast.show("Hello world")
+
 
         print("visitor_01_add", self.d.device_info)
         pass
