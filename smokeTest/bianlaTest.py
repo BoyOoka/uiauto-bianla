@@ -1,7 +1,10 @@
 import uiautomator2 as u2
+import atx
 import unittest
 from uiauto import *
 import HTMLReport
+import time
+from atx.ext.chromedriver import ChromeDriver
 
 
 
@@ -11,7 +14,9 @@ class bianlaTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(self):
-        self.d = u2.connect("192.168.13.250")
+        # self.d = u2.connect("192.168.13.250")
+        self.d = u2.connect('192.168.0.133')
+        # self.d = u2.connect('192.168.0.109')
         self.d.screen_on()
         self.d.swipe(552, 1771, 552, 950, 0.2)
         self.d.app_start("com.bianla.app")
@@ -27,7 +32,7 @@ class bianlaTest(unittest.TestCase):
         # self.d.app_stop("com.bianla.app")
         pass
 
-    def visitor_01_add(self):
+    def test_visitor_01_add(self):
         wait_click(self.d,"id", "com.bianla.app:id/iv_user")
         wait_click(self.d,"text", "添加访客")
         self.d(resourceId="com.bianla.app:id/et_nick").set_text("1")
@@ -40,6 +45,17 @@ class bianlaTest(unittest.TestCase):
         wait_click(self.d, "id", "com.bianla.app:id/signup_commit")
         # self.d.toast.get_message()
         # self.d.toast.show("Hello world")
+        # time.sleep(6)
+        # print(self.d.current_app(), self.d.device_info)
+        # # driver = web_driver(self.d)
+        # dx = atx.connect(self.d.device_info['serial'])
+        # info = self.d.current_app()
+        # driver = ChromeDriver(dx).driver(info['package'], True, info['activity'], info['package'])
+        # print('打印网址', driver.current_url)
+        # driver.close()
+        # print(find_toast(self.d, '添加访客成功'))
+
+
         #添加访客男
         wait_click(self.d, "text", "添加访客")
         wait_click(self.d, "id", "com.bianla.app:id/male_icon")
@@ -103,9 +119,9 @@ class bianlaTest(unittest.TestCase):
 def Test_Suite():
 # 构建测试集并添加Case
     suite = unittest.TestSuite()
-    loader = unittest.TestLoader()
+    # loader = unittest.TestLoader()
     # suite.addTests(loader.loadTestsFromTestCase(bianlaTest))
-    # suite.addTest(bianlaTest('visitor_01_add'))
+    suite.addTest(bianlaTest('test_visitor_01_add'))
     # suite.addTest(bianlaTest('visitor_02_check'))
     # suite.addTest(bianlaTest('visitor_03_delete'))
     suite.addTest(bianlaTest('share_01'))
