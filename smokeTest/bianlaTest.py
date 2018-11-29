@@ -109,9 +109,11 @@ class BianLaTest(unittest.TestCase):
         print(grade_right)
         print(fft_left, fft_right, optimal_fat_left, optimal_fat_right, optimal_weight_left, optimal_weight_right, bmi_left, bmi_right)
         self.d.press('back')
+        loss_fat = round(float(value_left[3]) - float(value_right[3]), 1)
+        loss_weight = round(float(value_left[1]) - float(value_right[1]), 1)
         self.assertEqual(int(day_num), reduce_days.days, "减脂天数")
-        self.assertEqual(float(fat_reduce), float(value_left[3])-float(value_right[3]), '减脂')
-        self.assertEqual(float(weight_reduce), float(value_left[1]) - float(value_right[1]), '减重')
+        self.assertEqual(float(fat_reduce), loss_fat, '减脂')
+        self.assertEqual(float(weight_reduce), loss_weight, '减重')
         #单位切换
         wait_click(self.d, "id", "com.bianla.app:id/btn_cancel")
         wait_click(self.d, "text", "我的")
@@ -158,11 +160,13 @@ class BianLaTest(unittest.TestCase):
         date_before_strp = datetime.datetime.strptime(date_before, "%Y-%m-%d")
         date_after_strp = datetime.datetime.strptime(date_after, "%Y-%m-%d")
         reduce_days = date_after_strp - date_before_strp
-
+        loss_fat = round(float(value_left[3]) - float(value_right[3]), 1)
+        loss_weight = round(float(value_left[1]) - float(value_right[1]), 1)
         #断言
+
         self.assertEqual(int(day_num), reduce_days.days, "减脂天数")
-        self.assertEqual(float(fat_reduce), float(value_left[3]) - float(value_right[3]), '减脂')
-        self.assertEqual(float(weight_reduce), float(value_left[1]) - float(value_right[1]), '减重')
+        self.assertEqual(float(fat_reduce), loss_fat, '减脂')
+        self.assertEqual(float(weight_reduce), loss_weight, '减重')
     def share_02(self):
         pass
     def share_03(self):
@@ -176,10 +180,10 @@ def Test_Suite():
     suite = unittest.TestSuite()
     loader = unittest.TestLoader()
     # suite.addTests(loader.loadTestsFromTestCase(bianlaTest))
-    suite.addTest(bianlaTest('visitor_01_add'))
-    suite.addTest(bianlaTest('visitor_02_check'))
-    suite.addTest(bianlaTest('visitor_03_delete'))
-    suite.addTest(bianlaTest('share_01'))
+    suite.addTest(BianLaTest('visitor_01_add'))
+    suite.addTest(BianLaTest('visitor_02_check'))
+    suite.addTest(BianLaTest('visitor_03_delete'))
+    suite.addTest(BianLaTest('share_01'))
     return suite
 
 if __name__ == '__main__':
