@@ -5,10 +5,7 @@ import HTMLReport
 import datetime
 
 
-
-
-
-class bianlaTest(unittest.TestCase):
+class BianLaTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(self):
