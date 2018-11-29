@@ -2,6 +2,7 @@ import uiautomator2 as u2
 import unittest
 from uiauto import *
 import HTMLReport
+import datetime
 
 
 
@@ -18,13 +19,13 @@ class bianlaTest(unittest.TestCase):
         if(self.d(resourceId="com.bianla.app:id/btn_register_login").wait(2)):
            wait_click(self.d, "id", "com.bianla.app:id/btn_register_login")
            wait_click(self.d, "id", "com.bianla.app:id/tv_login")
-           wait_sendkeys(self.d, "id", "com.bianla.app:id/login_account_et", "10000000962")
+           wait_sendkeys(self.d, "id", "com.bianla.app:id/login_account_et", "10000000963")
            wait_sendkeys(self.d, "id", "com.bianla.app:id/login_password_et", "123456")
            wait_click(self.d, "id", "com.bianla.app:id/login")
            wait_click(self.d, "id", "com.bianla.app:id/iv_i_know")
     @classmethod
     def tearDownClass(self):
-        # self.d.app_stop("com.bianla.app")
+        self.d.app_stop("com.bianla.app")
         pass
 
     def visitor_01_add(self):
@@ -77,21 +78,94 @@ class bianlaTest(unittest.TestCase):
         wait_click(self.d, "id", "com.bianla.app:id/iv_share")
         wait_click(self.d, "id", "com.bianla.app:id/share_style_01")
         self.d(resourceId="com.bianla.app:id/title").click()
+
+        fft_left = self.d(resourceId="com.bianla.app:id/fft",instance=0).get_text()
+        fft_right = self.d(resourceId="com.bianla.app:id/fft",instance=1).get_text()
+        optimal_weight_left = self.d(resourceId="com.bianla.app:id/optimal_weight", instance=0).get_text()
+        optimal_weight_right = self.d(resourceId="com.bianla.app:id/optimal_weight", instance=1).get_text()
+        optimal_fat_left = self.d(resourceId="com.bianla.app:id/optimal_fat", instance=0).get_text()
+        optimal_fat_right = self.d(resourceId="com.bianla.app:id/optimal_fat", instance=1).get_text()
+        bmi_left = self.d(resourceId="com.bianla.app:id/bmi",instance=0).get_text()
+        bmi_right = self.d(resourceId="com.bianla.app:id/bmi", instance=1).get_text()
         for i in range(0, 10):
             title_left.append(self.d(resourceId="com.bianla.app:id/title", instance=i).get_text())
             value_left.append(self.d(resourceId="com.bianla.app:id/t_value", instance=i).get_text())
             grade_left.append(self.d(resourceId="com.bianla.app:id/hit", instance=i).get_text())
-        print(title_left)
-        print(value_left)
-        print(grade_left)
+
         for j in range(10, 19):
             title_right.append(self.d(resourceId="com.bianla.app:id/title", instance=j).get_text())
             value_right.append(self.d(resourceId="com.bianla.app:id/t_value", instance=j).get_text())
             grade_right.append(self.d(resourceId="com.bianla.app:id/hit", instance=j).get_text())
+        fat_reduce = self.d(resourceId="com.bianla.app:id/tv_fat_value").get_text()
+        weight_reduce = self.d(resourceId="com.bianla.app:id/tv_weight_value").get_text()
+        date_before = self.d(resourceId="com.bianla.app:id/tv_fat_loss_before").get_text()
+        date_after = self.d(resourceId="com.bianla.app:id/tv_fat_loss_after").get_text()
+        day_num = self.d(resourceId="com.bianla.app:id/tv_day_num").get_text()
+        date_before_strp = datetime.datetime.strptime(date_before, "%Y-%m-%d")
+        date_after_strp = datetime.datetime.strptime(date_after, "%Y-%m-%d")
+        reduce_days = date_after_strp-date_before_strp
+        print(title_left)
+        print(value_left)
+        print(grade_left)
         print(title_right)
         print(value_right)
         print(grade_right)
-        pass
+        print(fft_left, fft_right, optimal_fat_left, optimal_fat_right, optimal_weight_left, optimal_weight_right, bmi_left, bmi_right)
+        self.d.press('back')
+        self.assertEqual(int(day_num), reduce_days.days, "减脂天数")
+        self.assertEqual(float(fat_reduce), float(value_left[3])-float(value_right[3]), '减脂')
+        self.assertEqual(float(weight_reduce), float(value_left[1]) - float(value_right[1]), '减重')
+        #单位切换
+        wait_click(self.d, "id", "com.bianla.app:id/btn_cancel")
+        wait_click(self.d, "text", "我的")
+        wait_click(self.d, "text", "系统设置")
+        if fft_left.endswith('g'):
+            wait_click(self.d, "id", "com.bianla.app:id/tv_05kg")
+        else:
+            wait_click(self.d, "id", "com.bianla.app:id/tv_kg")
+        wait_click(self.d, "id", "com.bianla.app:id/iv_back")
+        wait_click(self.d, "id", "com.bianla.app:id/home_bottom_button_image")
+
+        title_left = []
+        value_left = []
+        grade_left = []
+        title_right = []
+        value_right = []
+        grade_right = []
+        wait_click(self.d, "id", "com.bianla.app:id/iv_share")
+        wait_click(self.d, "id", "com.bianla.app:id/share_style_01")
+        self.d(resourceId="com.bianla.app:id/title").click()
+
+        fft_left = self.d(resourceId="com.bianla.app:id/fft", instance=0).get_text()
+        fft_right = self.d(resourceId="com.bianla.app:id/fft", instance=1).get_text()
+        optimal_weight_left = self.d(resourceId="com.bianla.app:id/optimal_weight", instance=0).get_text()
+        optimal_weight_right = self.d(resourceId="com.bianla.app:id/optimal_weight", instance=1).get_text()
+        optimal_fat_left = self.d(resourceId="com.bianla.app:id/optimal_fat", instance=0).get_text()
+        optimal_fat_right = self.d(resourceId="com.bianla.app:id/optimal_fat", instance=1).get_text()
+        bmi_left = self.d(resourceId="com.bianla.app:id/bmi", instance=0).get_text()
+        bmi_right = self.d(resourceId="com.bianla.app:id/bmi", instance=1).get_text()
+        for i in range(0, 10):
+            title_left.append(self.d(resourceId="com.bianla.app:id/title", instance=i).get_text())
+            value_left.append(self.d(resourceId="com.bianla.app:id/t_value", instance=i).get_text())
+            grade_left.append(self.d(resourceId="com.bianla.app:id/hit", instance=i).get_text())
+
+        for j in range(10, 19):
+            title_right.append(self.d(resourceId="com.bianla.app:id/title", instance=j).get_text())
+            value_right.append(self.d(resourceId="com.bianla.app:id/t_value", instance=j).get_text())
+            grade_right.append(self.d(resourceId="com.bianla.app:id/hit", instance=j).get_text())
+        fat_reduce = self.d(resourceId="com.bianla.app:id/tv_fat_value").get_text()
+        weight_reduce = self.d(resourceId="com.bianla.app:id/tv_weight_value").get_text()
+        date_before = self.d(resourceId="com.bianla.app:id/tv_fat_loss_before").get_text()
+        date_after = self.d(resourceId="com.bianla.app:id/tv_fat_loss_after").get_text()
+        day_num = self.d(resourceId="com.bianla.app:id/tv_day_num").get_text()
+        date_before_strp = datetime.datetime.strptime(date_before, "%Y-%m-%d")
+        date_after_strp = datetime.datetime.strptime(date_after, "%Y-%m-%d")
+        reduce_days = date_after_strp - date_before_strp
+
+        #断言
+        self.assertEqual(int(day_num), reduce_days.days, "减脂天数")
+        self.assertEqual(float(fat_reduce), float(value_left[3]) - float(value_right[3]), '减脂')
+        self.assertEqual(float(weight_reduce), float(value_left[1]) - float(value_right[1]), '减重')
     def share_02(self):
         pass
     def share_03(self):
@@ -105,9 +179,9 @@ def Test_Suite():
     suite = unittest.TestSuite()
     loader = unittest.TestLoader()
     # suite.addTests(loader.loadTestsFromTestCase(bianlaTest))
-    # suite.addTest(bianlaTest('visitor_01_add'))
-    # suite.addTest(bianlaTest('visitor_02_check'))
-    # suite.addTest(bianlaTest('visitor_03_delete'))
+    suite.addTest(bianlaTest('visitor_01_add'))
+    suite.addTest(bianlaTest('visitor_02_check'))
+    suite.addTest(bianlaTest('visitor_03_delete'))
     suite.addTest(bianlaTest('share_01'))
     return suite
 
