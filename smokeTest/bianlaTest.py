@@ -232,6 +232,8 @@ class BianLaTest(unittest.TestCase):
             value_report.append(self.d(resourceId="com.bianla.app:id/t_value", instance=i).get_text())
             grade_report.append(self.d(resourceId="com.bianla.app:id/hit", instance=i).get_text())
         print(title_hostory, value_hostory, grade_hostory)
+        self.d.press('back')
+        self.d.press('back')
         #断言
         self.assertEqual("添加访客", visitor_text, "访客页面")
         self.assertEqual(title_hostory, title_report, "标题")
