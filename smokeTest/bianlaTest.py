@@ -222,7 +222,6 @@ class BianLaTest(unittest.TestCase):
         wait_click(self.d, "text", "健康报告")
         time.sleep(1)
         self.d.swipe(552, 1771, 552, 950, 0.8)
-
         title_report = []
         value_report = []
         grade_report = []
