@@ -243,10 +243,10 @@ def Test_Suite():
     suite = unittest.TestSuite()
     loader = unittest.TestLoader()
     # suite.addTests(loader.loadTestsFromTestCase(bianlaTest))
-    # suite.addTest(BianLaTest('visitor_01_add'))
-    # suite.addTest(BianLaTest('visitor_02_check'))
-    # suite.addTest(BianLaTest('visitor_03_delete'))
-    # suite.addTest(BianLaTest('share_01'))
+    suite.addTest(BianLaTest('visitor_01_add'))
+    suite.addTest(BianLaTest('visitor_02_check'))
+    suite.addTest(BianLaTest('visitor_03_delete'))
+    suite.addTest(BianLaTest('share_01'))
     suite.addTest(BianLaTest('history_weight01'))
     return suite
 
