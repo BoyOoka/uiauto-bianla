@@ -204,6 +204,7 @@ class BianLaTest(unittest.TestCase):
         #清除多余数据
         wait_click(self.d, "id", "com.bianla.app:id/iv_green_delete")
         wait_click(self.d, "id", "com.bianla.app:id/delete")
+        time.sleep(0.8)
         wait_click(self.d, "id", "com.bianla.app:id/fat_weight_container")
         #获取身体数据
         time.sleep(1)
