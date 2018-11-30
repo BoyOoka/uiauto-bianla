@@ -3,6 +3,7 @@ import unittest
 from uiauto import *
 import HTMLReport
 import datetime
+import time
 
 
 class BianLaTest(unittest.TestCase):
@@ -22,7 +23,7 @@ class BianLaTest(unittest.TestCase):
            wait_click(self.d, "id", "com.bianla.app:id/iv_i_know")
     @classmethod
     def tearDownClass(self):
-        self.d.app_stop("com.bianla.app")
+        # self.d.app_stop("com.bianla.app")
         pass
 
     def visitor_01_add(self):
@@ -109,13 +110,13 @@ class BianLaTest(unittest.TestCase):
         print(grade_right)
         print(fft_left, fft_right, optimal_fat_left, optimal_fat_right, optimal_weight_left, optimal_weight_right, bmi_left, bmi_right)
         self.d.press('back')
+        wait_click(self.d, "id", "com.bianla.app:id/btn_cancel")
         loss_fat = round(float(value_left[3]) - float(value_right[3]), 1)
         loss_weight = round(float(value_left[1]) - float(value_right[1]), 1)
         self.assertEqual(int(day_num), reduce_days.days, "减脂天数")
         self.assertEqual(float(fat_reduce), loss_fat, '减脂')
         self.assertEqual(float(weight_reduce), loss_weight, '减重')
         #单位切换
-        wait_click(self.d, "id", "com.bianla.app:id/btn_cancel")
         wait_click(self.d, "text", "我的")
         wait_click(self.d, "text", "系统设置")
         if fft_left.endswith('g'):
@@ -157,22 +158,85 @@ class BianLaTest(unittest.TestCase):
         date_before = self.d(resourceId="com.bianla.app:id/tv_fat_loss_before").get_text()
         date_after = self.d(resourceId="com.bianla.app:id/tv_fat_loss_after").get_text()
         day_num = self.d(resourceId="com.bianla.app:id/tv_day_num").get_text()
+        #返回首页
+        self.d.press('back')
+        wait_click(self.d, "id", "com.bianla.app:id/btn_cancel")
+
         date_before_strp = datetime.datetime.strptime(date_before, "%Y-%m-%d")
         date_after_strp = datetime.datetime.strptime(date_after, "%Y-%m-%d")
         reduce_days = date_after_strp - date_before_strp
         loss_fat = round(float(value_left[3]) - float(value_right[3]), 1)
         loss_weight = round(float(value_left[1]) - float(value_right[1]), 1)
-        #断言
 
+        #断言
         self.assertEqual(int(day_num), reduce_days.days, "减脂天数")
         self.assertEqual(float(fat_reduce), loss_fat, '减脂')
         self.assertEqual(float(weight_reduce), loss_weight, '减重')
+
     def share_02(self):
         pass
+
     def share_03(self):
         pass
+
     def share_04(self):
         pass
+
+    def history_weight01(self):
+        self.d(resourceId="com.bianla.app:id/tv_title", text="更多").click()
+        wait_click(self.d, "text", "历史体重")
+        wait_click(self.d, "id", "com.bianla.app:id/fat_weight_container")
+        wait_click(self.d, "id", "com.bianla.app:id/button3")
+        visitor_text = ""
+        if(self.d(text="添加访客").wait()):
+            visitor_text = self.d(text="添加访客").get_text()
+            self.d(resourceId="com.bianla.app:id/title_left_bt").click()
+        wait_click(self.d, "id", "com.bianla.app:id/fat_weight_container")
+        wait_click(self.d, "id", "com.bianla.app:id/button1")
+        wait_click(self.d, "des", "转到上一层级")
+        wait_click(self.d, "id", "com.bianla.app:id/iv_green_delete")
+        wait_click(self.d, "id", "com.bianla.app:id/cancel")
+        wait_click(self.d, "id", "com.bianla.app:id/iv_green_delete")
+        wait_click(self.d, "id", "com.bianla.app:id/delete")
+        wait_click(self.d, "id", "com.bianla.app:id/fat_weight_container")
+        wait_click(self.d, "id", "com.bianla.app:id/button2")
+
+        #清除多余数据
+        wait_click(self.d, "id", "com.bianla.app:id/iv_green_delete")
+        wait_click(self.d, "id", "com.bianla.app:id/delete")
+        wait_click(self.d, "id", "com.bianla.app:id/fat_weight_container")
+        #获取身体数据
+        time.sleep(1)
+        self.d.swipe(552, 1771, 552, 950, 0.8)
+        title_hostory = []
+        value_hostory = []
+        grade_hostory = []
+        for i in range(0, 10):
+            title_hostory.append(self.d(resourceId="com.bianla.app:id/title", instance=i).get_text())
+            value_hostory.append(self.d(resourceId="com.bianla.app:id/t_value", instance=i).get_text())
+            grade_hostory.append(self.d(resourceId="com.bianla.app:id/hit", instance=i).get_text())
+        wait_click(self.d, "des", "转到上一层级")
+        wait_click(self.d, "id", "com.bianla.app:id/title_left_bt")
+
+        #获取健康报告数据
+        wait_click(self.d, "text", "健康报告")
+        time.sleep(1)
+        self.d.swipe(552, 1771, 552, 950, 0.8)
+
+        title_report = []
+        value_report = []
+        grade_report = []
+
+        for i in range(0, 10):
+            title_report.append(self.d(resourceId="com.bianla.app:id/title", instance=i).get_text())
+            value_report.append(self.d(resourceId="com.bianla.app:id/t_value", instance=i).get_text())
+            grade_report.append(self.d(resourceId="com.bianla.app:id/hit", instance=i).get_text())
+        print(title_hostory, value_hostory, grade_hostory)
+        #断言
+        self.assertEqual("添加访客", visitor_text, "访客页面")
+        self.assertEqual(title_hostory, title_report, "标题")
+        self.assertEqual(value_hostory, value_report, "数值")
+        self.assertEqual(grade_hostory, grade_report, "等级")
 
 
 def Test_Suite():
@@ -180,16 +244,17 @@ def Test_Suite():
     suite = unittest.TestSuite()
     loader = unittest.TestLoader()
     # suite.addTests(loader.loadTestsFromTestCase(bianlaTest))
-    suite.addTest(BianLaTest('visitor_01_add'))
-    suite.addTest(BianLaTest('visitor_02_check'))
-    suite.addTest(BianLaTest('visitor_03_delete'))
-    suite.addTest(BianLaTest('share_01'))
+    # suite.addTest(BianLaTest('visitor_01_add'))
+    # suite.addTest(BianLaTest('visitor_02_check'))
+    # suite.addTest(BianLaTest('visitor_03_delete'))
+    # suite.addTest(BianLaTest('share_01'))
+    suite.addTest(BianLaTest('history_weight01'))
     return suite
 
 if __name__ == '__main__':
     # 启动指定的测试集
     # runner = unittest.TextTestRunner()
-    runner = HTMLReport.TestRunner(report_file_name='test',  # 报告文件名，如果未赋值，将采用“test+时间戳”
+    runner = HTMLReport.TestRunner(report_file_name='test'+datetime.datetime.now().strftime('%Y%m%d%H%M%S'),  # 报告文件名，如果未赋值，将采用“test+时间戳”
                                    output_path='report',  # 保存文件夹名，默认“report”
                                    title='测试报告',  # 报告标题，默认“测试报告”
                                    description='无测试描述',  # 报告描述，默认“测试描述”
