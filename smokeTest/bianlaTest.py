@@ -201,9 +201,12 @@ class BianLaTest(unittest.TestCase):
         wait_click(self.d, "id", "com.bianla.app:id/fat_weight_container")
         wait_click(self.d, "id", "com.bianla.app:id/button2")
 
-        #清除多余数据
+        #列表清除多余数据
+        wait_click(self.d, "id", "com.bianla.app:id/ll_list_model_")
+        wait_click(self.d, "id", "com.bianla.app:id/tv_management")
         wait_click(self.d, "id", "com.bianla.app:id/iv_green_delete")
         wait_click(self.d, "id", "com.bianla.app:id/delete")
+        wait_click(self.d, "id", "com.bianla.app:id/tv_management")
         time.sleep(0.8)
         wait_click(self.d, "id", "com.bianla.app:id/fat_weight_container")
         #获取身体数据
@@ -217,7 +220,7 @@ class BianLaTest(unittest.TestCase):
             value_hostory.append(self.d(resourceId="com.bianla.app:id/t_value", instance=i).get_text())
             grade_hostory.append(self.d(resourceId="com.bianla.app:id/hit", instance=i).get_text())
         wait_click(self.d, "des", "转到上一层级")
-        wait_click(self.d, "id", "com.bianla.app:id/title_left_bt")
+        wait_click(self.d, "id", "com.bianla.app:id/iv_back")
 
         #获取健康报告数据
         wait_click(self.d, "text", "健康报告")
@@ -240,16 +243,34 @@ class BianLaTest(unittest.TestCase):
         self.assertEqual(value_hostory, value_report, "数值")
         self.assertEqual(grade_hostory, grade_report, "等级")
 
+    def weight_input(self):
+        self.d(resourceId="com.bianla.app:id/tv_title", text="更多").click()
+        wait_click(self.d, "id", "录入体重")
+        if self.d(resourceId="com.bianla.app:id/btn_cancel").exists:
+            sugest = self.d(resourceId="com.bianla.app:id/suggest_tv").get_text()
+            self.assertEqual(sugest, "手动记录的身体数据不能代表您的真实身体数据如需获取个人真实数据，请使用体脂秤进行数据检测。","建议")
+            self.d(resourceId="com.bianla.app:id/btn_cancel").click()
+        self.d(resourceId="com.bianla.app:id/selection_roller_view").scroll(20)
+        time.sleep(0.5)
+        weight_in = self.d(resourceId="com.bianla.app:id/tv_selected_weight").get_text()
+        wait_click(self.d, "id", "com.bianla.app:id/btn_add_weight")
+        weight_get = self.d(resourceId="com.bianla.app:id/t_value",instance=1).get_text()
+        if self.d(resourceId="com.bianla.app:id/t_unit").get_text() == '斤':
+            self.assertEqual(float(weight_in, 1)*2, weight_get,"体重")
+        else:
+            self.assertEqual(weight_in, weight_get, "体重")
+
 
 def Test_Suite():
 # 构建测试集并添加Case
     suite = unittest.TestSuite()
     loader = unittest.TestLoader()
     # suite.addTests(loader.loadTestsFromTestCase(bianlaTest))
-    suite.addTest(BianLaTest('visitor_01_add'))
-    suite.addTest(BianLaTest('visitor_02_check'))
-    suite.addTest(BianLaTest('visitor_03_delete'))
-    suite.addTest(BianLaTest('share_01'))
+    # suite.addTest(BianLaTest('visitor_01_add'))
+    # suite.addTest(BianLaTest('visitor_02_check'))
+    # suite.addTest(BianLaTest('visitor_03_delete'))
+    # suite.addTest(BianLaTest('share_01'))
+    # suite.addTest(BianLaTest('history_weight01'))
     suite.addTest(BianLaTest('history_weight01'))
     return suite
 

@@ -2,6 +2,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.common.by import By
 from atx.ext.chromedriver import ChromeDriver
+import uiautomator2
 import atx
 
 
@@ -9,17 +10,26 @@ def wait_click(d, selector, text, time = 3):
     if(selector=="id"):
         if(d(resourceId=text).wait(time)):
             d(resourceId=text).click()
+        else:
+            raise uiautomator2.UiObjectNotFoundError
     if(selector == "text"):
         if (d(text=text).wait(time)):
             d(text=text).click()
+        else:
+            raise uiautomator2.UiObjectNotFoundError
+
     if(selector=="des"):
         if(d(description=text).wait(time)):
             d(description=text).click()
+        else:
+            raise uiautomator2.UiObjectNotFoundError
 
 def wait_sendkeys(d, selector, text, keys, time=3):
     if(selector == "id"):
         if(d(resourceId=text).wait(time)):
             d(resourceId=text).set_text(keys)
+        else:
+            raise uiautomator2.UiObjectNotFoundError
 
 
 def find_toast(d, toast):
