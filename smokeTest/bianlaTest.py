@@ -245,7 +245,7 @@ class BianLaTest(unittest.TestCase):
 
     def weight_input(self):
         self.d(resourceId="com.bianla.app:id/tv_title", text="更多").click()
-        wait_click(self.d, "id", "录入体重")
+        wait_click(self.d, "text", "录入体重")
         if self.d(resourceId="com.bianla.app:id/btn_cancel").exists:
             sugest = self.d(resourceId="com.bianla.app:id/suggest_tv").get_text()
             self.assertEqual(sugest, "手动记录的身体数据不能代表您的真实身体数据如需获取个人真实数据，请使用体脂秤进行数据检测。","建议")
@@ -256,7 +256,7 @@ class BianLaTest(unittest.TestCase):
         wait_click(self.d, "id", "com.bianla.app:id/btn_add_weight")
         weight_get = self.d(resourceId="com.bianla.app:id/t_value",instance=1).get_text()
         if self.d(resourceId="com.bianla.app:id/t_unit").get_text() == '斤':
-            self.assertEqual(float(weight_in, 1)*2, weight_get,"体重")
+            self.assertEqual(round(float(weight_in),1)*2, weight_get,"体重")
         else:
             self.assertEqual(weight_in, weight_get, "体重")
 
@@ -271,7 +271,7 @@ def Test_Suite():
     # suite.addTest(BianLaTest('visitor_03_delete'))
     # suite.addTest(BianLaTest('share_01'))
     # suite.addTest(BianLaTest('history_weight01'))
-    suite.addTest(BianLaTest('history_weight01'))
+    suite.addTest(BianLaTest('weight_input'))
     return suite
 
 if __name__ == '__main__':
