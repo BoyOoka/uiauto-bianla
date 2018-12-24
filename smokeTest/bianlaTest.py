@@ -10,7 +10,7 @@ class BianLaTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(self):
-        self.d = u2.connect("192.168.13.250")
+        self.d = u2.connect("10.20.122.241")
         self.d.screen_on()
         self.d.swipe(552, 1771, 552, 950, 0.2)
         self.d.app_start("com.bianla.app")
@@ -249,14 +249,15 @@ class BianLaTest(unittest.TestCase):
         if self.d(resourceId="com.bianla.app:id/btn_cancel").exists:
             sugest = self.d(resourceId="com.bianla.app:id/suggest_tv").get_text()
             self.assertEqual(sugest, "手动记录的身体数据不能代表您的真实身体数据如需获取个人真实数据，请使用体脂秤进行数据检测。","建议")
-            self.d(resourceId="com.bianla.app:id/btn_cancel").click()
+            wait_click(self.d, "id", "com.bianla.app:id/btn_cancel")
         self.d(resourceId="com.bianla.app:id/selection_roller_view").scroll(20)
         time.sleep(0.5)
         weight_in = self.d(resourceId="com.bianla.app:id/tv_selected_weight").get_text()
         wait_click(self.d, "id", "com.bianla.app:id/btn_add_weight")
         weight_get = self.d(resourceId="com.bianla.app:id/t_value",instance=1).get_text()
+
         if self.d(resourceId="com.bianla.app:id/t_unit").get_text() == '斤':
-            self.assertEqual(round(float(weight_in),1)*2, weight_get,"体重")
+            self.assertEqual(round(float(weight_in),1)*2, float(weight_get), "体重")
         else:
             self.assertEqual(weight_in, weight_get, "体重")
 
@@ -265,12 +266,12 @@ def Test_Suite():
 # 构建测试集并添加Case
     suite = unittest.TestSuite()
     loader = unittest.TestLoader()
-    # suite.addTests(loader.loadTestsFromTestCase(bianlaTest))
-    # suite.addTest(BianLaTest('visitor_01_add'))
-    # suite.addTest(BianLaTest('visitor_02_check'))
-    # suite.addTest(BianLaTest('visitor_03_delete'))
-    # suite.addTest(BianLaTest('share_01'))
-    # suite.addTest(BianLaTest('history_weight01'))
+    #suite.addTests(loader.loadTestsFromTestCase(bianlaTest))
+    suite.addTest(BianLaTest('visitor_01_add'))
+    suite.addTest(BianLaTest('visitor_02_check'))
+    suite.addTest(BianLaTest('visitor_03_delete'))
+    suite.addTest(BianLaTest('share_01'))
+    suite.addTest(BianLaTest('history_weight01'))
     suite.addTest(BianLaTest('weight_input'))
     return suite
 
