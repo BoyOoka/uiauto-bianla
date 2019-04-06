@@ -2,15 +2,17 @@ import uiautomator2 as u2
 import unittest
 from uiauto import *
 import HTMLReport
+from HTMLTestRunner_Chart.HTMLTestRunner_Chart import HTMLTestRunner
 import datetime
 import time
+import base64
 
 
 class BianLaTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(self):
-        self.d = u2.connect("192.168.13.250")
+        self.d = u2.connect("192.168.0.133")
         self.d.screen_on()
         self.d.swipe(552, 1771, 552, 950, 0.2)
         self.d.app_start("com.bianla.app")
@@ -25,9 +27,21 @@ class BianLaTest(unittest.TestCase):
     def tearDownClass(self):
         # self.d.app_stop("com.bianla.app")
         pass
+    def setUp(self):
+        self.imgs = []
+        # self.addCleanup(self.cleanup)
+    def add_img(self,pic_name):
+        self.d.screenshot('./pic/'+pic_name)
+        with open('./pic/'+pic_name, 'rb') as f:
+            base64_data = base64.b64encode(f.read())
+            s = base64_data.decode()
+        self.imgs.append(s)
+        return True
 
-    def visitor_01_add(self):
+    def test_visitor_01_add(self):
+        '''添加访客'''
         wait_click(self.d,"id", "com.bianla.app:id/iv_user")
+        self.add_img('test2.jpg')
         wait_click(self.d,"text", "添加访客")
         self.d(resourceId="com.bianla.app:id/et_nick").set_text("1")
         wait_sendkeys(self.d,"id", "com.bianla.app:id/et_nick","auto访客女")
@@ -244,29 +258,37 @@ class BianLaTest(unittest.TestCase):
 def Test_Suite():
 # 构建测试集并添加Case
     suite = unittest.TestSuite()
-    loader = unittest.TestLoader()
+    # loader = unittest.TestLoader()
     # suite.addTests(loader.loadTestsFromTestCase(bianlaTest))
-    suite.addTest(BianLaTest('visitor_01_add'))
-    suite.addTest(BianLaTest('visitor_02_check'))
-    suite.addTest(BianLaTest('visitor_03_delete'))
-    suite.addTest(BianLaTest('share_01'))
-    suite.addTest(BianLaTest('history_weight01'))
+    suite.addTest(BianLaTest('test_visitor_01_add'))
+    # suite.addTest(BianLaTest('visitor_02_check'))
+    # suite.addTest(BianLaTest('visitor_03_delete'))
+    # suite.addTest(BianLaTest('share_01'))
+    # suite.addTest(BianLaTest('history_weight01'))
     return suite
 
 if __name__ == '__main__':
     # 启动指定的测试集
-    # runner = unittest.TextTestRunner()
-    runner = HTMLReport.TestRunner(report_file_name='test'+datetime.datetime.now().strftime('%Y%m%d%H%M%S'),  # 报告文件名，如果未赋值，将采用“test+时间戳”
-                                   output_path='report',  # 保存文件夹名，默认“report”
-                                   title='测试报告',  # 报告标题，默认“测试报告”
-                                   description='无测试描述',  # 报告描述，默认“测试描述”
-                                   thread_count=1,  # 并发线程数量（无序执行测试），默认数量 1
-                                   thread_start_wait=3,  # 各线程启动延迟，默认 0 s
-                                   sequential_execution=False,  # 是否按照套件添加(addTests)顺序执行，
-                                   # 会等待一个addTests执行完成，再执行下一个，默认 False
-                                   # 如果用例中存在 tearDownClass ，建议设置为True，
-                                   # 否则 tearDownClass 将会在所有用例线程执行完后才会执行。
-                                   # lang='en'
-                                   lang='cn'  # 支持中文与英文，默认中文
-                                   )
+    # runner = HTMLReport.TestRunner(report_file_name='test'+datetime.datetime.now().strftime('%Y%m%d%H%M%S'),  # 报告文件名，如果未赋值，将采用“test+时间戳”
+    #                                output_path='report',  # 保存文件夹名，默认“report”
+    #                                title='测试报告',  # 报告标题，默认“测试报告”
+    #                                description='无测试描述',  # 报告描述，默认“测试描述”
+    #                                thread_count=1,  # 并发线程数量（无序执行测试），默认数量 1
+    #                                thread_start_wait=3,  # 各线程启动延迟，默认 0 s
+    #                                sequential_execution=False,  # 是否按照套件添加(addTests)顺序执行，
+    #                                # 会等待一个addTests执行完成，再执行下一个，默认 False
+    #                                # 如果用例中存在 tearDownClass ，建议设置为True，
+    #                                # 否则 tearDownClass 将会在所有用例线程执行完后才会执行。
+    #                                # lang='en'
+    #                                lang='cn'  # 支持中文与英文，默认中文
+    #                                )
+
+    runner = HTMLTestRunner(
+        title="binalTest",
+        description="",
+        stream=open('./bilaTest.html', 'wb'),
+        retry=0,
+        verbosity=2,
+        save_last_try=True
+    )
     runner.run(Test_Suite())
