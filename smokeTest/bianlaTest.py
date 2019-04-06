@@ -4,13 +4,15 @@ from uiauto import *
 import HTMLReport
 import datetime
 import time
+from HTMLTestRunner_Chart.HTMLTestRunner_Chart import HTMLTestRunner
 
 
 class BianLaTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(self):
-        self.d = u2.connect("192.168.13.250")
+        # self.d = u2.connect("192.168.13.250")
+        self.d = u2.connect("192.168.0.133")
         self.d.screen_on()
         self.d.swipe(552, 1771, 552, 950, 0.2)
         self.d.app_start("com.bianla.app")
@@ -18,7 +20,7 @@ class BianLaTest(unittest.TestCase):
            wait_click(self.d, "id", "com.bianla.app:id/btn_register_login")
            wait_click(self.d, "id", "com.bianla.app:id/tv_login")
            wait_sendkeys(self.d, "id", "com.bianla.app:id/login_account_et", "10000000963")
-           wait_sendkeys(self.d, "id", "com.bianla.app:id/login_password_et", "123456")
+           wait_sendkeys(self.d, "id", "com.bianla.app:id/login_password_et", "aaa")
            wait_click(self.d, "id", "com.bianla.app:id/login")
            wait_click(self.d, "id", "com.bianla.app:id/iv_i_know")
     @classmethod
@@ -26,7 +28,7 @@ class BianLaTest(unittest.TestCase):
         # self.d.app_stop("com.bianla.app")
         pass
 
-    def visitor_01_add(self):
+    def test_visitor_01_add(self):
         wait_click(self.d,"id", "com.bianla.app:id/iv_user")
         wait_click(self.d,"text", "添加访客")
         self.d(resourceId="com.bianla.app:id/et_nick").set_text("1")
@@ -50,7 +52,7 @@ class BianLaTest(unittest.TestCase):
         self.d.press("back")
         wait_click(self.d, "id", "com.bianla.app:id/signup_commit")
 
-    def visitor_02_check(self):
+    def test_visitor_02_check(self):
         title_text = ""
         wait_click(self.d, "id", "com.bianla.app:id/icon")
         wait_click(self.d, "text", "上 秤")
@@ -59,14 +61,14 @@ class BianLaTest(unittest.TestCase):
         wait_click(self.d, "id", "com.bianla.app:id/title_left_bt")
         self.assertEqual(title_text, "同步数据")
 
-    def visitor_03_delete(self):
+    def test_visitor_03_delete(self):
         wait_click(self.d, "id", "com.bianla.app:id/text")
         wait_click(self.d, "id", "com.bianla.app:id/select_user_cb")
         self.d(resourceId="com.bianla.app:id/select_user_cb", className="android.widget.CheckBox", instance=1).click()
         wait_click(self.d, "id", "com.bianla.app:id/delete_select_tv")
         wait_click(self.d, "text", "确定")
         wait_click(self.d, "id", "com.bianla.app:id/title_left_bt")
-    def share_01(self):
+    def test_share_01(self):
         title_left = []
         value_left = []
         grade_left = []
@@ -241,32 +243,45 @@ class BianLaTest(unittest.TestCase):
         self.assertEqual(grade_hostory, grade_report, "等级")
 
 
-def Test_Suite():
-# 构建测试集并添加Case
-    suite = unittest.TestSuite()
-    loader = unittest.TestLoader()
-    # suite.addTests(loader.loadTestsFromTestCase(bianlaTest))
-    suite.addTest(BianLaTest('visitor_01_add'))
-    suite.addTest(BianLaTest('visitor_02_check'))
-    suite.addTest(BianLaTest('visitor_03_delete'))
-    suite.addTest(BianLaTest('share_01'))
-    suite.addTest(BianLaTest('history_weight01'))
-    return suite
+# def Test_Suite():
+# # 构建测试集并添加Case
+#     suite = unittest.TestSuite()
+#     loader = unittest.TestLoader()
+#     suite.addTest((loader.loadTestsFromName('test_visitor_01_add')))
+#     # suite.addTests(loader.loadTestsFromTestCase(BianLaTest))
+#     suite.addTest(BianLaTest('test_visitor_01_add'))
+#     # suite.addTest(BianLaTest('test_visitor_02_check'))
+#     # suite.addTest(BianLaTest('test_visitor_03_delete'))
+#     # suite.addTest(BianLaTest('test_share_01'))
+#     # suite.addTest(BianLaTest('test_history_weight01'))
+#     return suite
 
 if __name__ == '__main__':
-    # 启动指定的测试集
-    # runner = unittest.TextTestRunner()
-    runner = HTMLReport.TestRunner(report_file_name='test'+datetime.datetime.now().strftime('%Y%m%d%H%M%S'),  # 报告文件名，如果未赋值，将采用“test+时间戳”
-                                   output_path='report',  # 保存文件夹名，默认“report”
-                                   title='测试报告',  # 报告标题，默认“测试报告”
-                                   description='无测试描述',  # 报告描述，默认“测试描述”
-                                   thread_count=1,  # 并发线程数量（无序执行测试），默认数量 1
-                                   thread_start_wait=3,  # 各线程启动延迟，默认 0 s
-                                   sequential_execution=False,  # 是否按照套件添加(addTests)顺序执行，
-                                   # 会等待一个addTests执行完成，再执行下一个，默认 False
-                                   # 如果用例中存在 tearDownClass ，建议设置为True，
-                                   # 否则 tearDownClass 将会在所有用例线程执行完后才会执行。
-                                   # lang='en'
-                                   lang='cn'  # 支持中文与英文，默认中文
-                                   )
-    runner.run(Test_Suite())
+    suite = unittest.TestSuite()
+    suite.addTest(BianLaTest('test_visitor_01_add'))
+   #  loader = unittest.TestLoader()
+   # # suite.addTest(BianLaTest('test_visitor_01_add'))
+   #  suite.addTests(loader.loadTestsFromTestCase('test_visitor_01_add'))
+   #  # 启动指定的测试集
+   #  # runner = unittest.TextTestRunner()
+   #  runner = HTMLReport.TestRunner(report_file_name='test'+datetime.datetime.now().strftime('%Y%m%d%H%M%S'),  # 报告文件名，如果未赋值，将采用“test+时间戳”
+   #                                 output_path='report',  # 保存文件夹名，默认“report”
+   #                                 title='测试报告',  # 报告标题，默认“测试报告”
+   #                                 description='无测试描述',  # 报告描述，默认“测试描述”
+   #                                 thread_count=1,  # 并发线程数量（无序执行测试），默认数量 1
+   #                                 thread_start_wait=3,  # 各线程启动延迟，默认 0 s
+   #                                 sequential_execution=False,  # 是否按照套件添加(addTests)顺序执行，
+   #                                 # 会等待一个addTests执行完成，再执行下一个，默认 False
+   #                                 # 如果用例中存在 tearDownClass ，建议设置为True，
+   #                                 # 否则 tearDownClass 将会在所有用例线程执行完后才会执行。
+   #                                 # lang='en'
+   #                                 lang='cn'  # 支持中文与英文，默认中文
+   #                                 )
+    runner = HTMLTestRunner(
+        title='变啦test',
+        description='',
+        stream=open('./bian.html', 'wb'),
+        retry=0,
+        save_last_try=True
+    )
+    runner.run(suite)

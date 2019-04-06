@@ -1,10 +1,14 @@
-import uiautomator2 as u2
-import time
+def flattend(nested):
+    try:
+        for sublist in nested:
+            for element in flattend(sublist):
+                yield element
+                print("yield主",sublist,element)
+    except TypeError:
+        #print(nested)
+        yield nested
+        print("typeError:",nested)
 
-# d = u2.connect("192.168.13.250")
-# d.app_start("com.bianla.app")
-# print(d.device_info)
-time1 = time.time()
-now = time.localtime(time1)
-rightnow = time.strftime("%Y-%m-%d %H:%M:%S", now)
-print(rightnow)
+nested = [[1,2],[3,4],[5,[6,7]]]
+
+print(list(flattend(nested)))

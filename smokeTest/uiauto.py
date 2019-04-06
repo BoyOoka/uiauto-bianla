@@ -6,15 +6,18 @@ import atx
 
 
 def wait_click(d, selector, text, time = 3):
-    if(selector=="id"):
-        if(d(resourceId=text).wait(time)):
-            d(resourceId=text).click()
-    if(selector == "text"):
-        if (d(text=text).wait(time)):
-            d(text=text).click()
-    if(selector=="des"):
-        if(d(description=text).wait(time)):
-            d(description=text).click()
+    if (selector == "id"):
+        d(resourceId=text).wait(time)
+        d(resourceId=text).click()
+    if (selector == "text"):
+        d(text=text).wait(time)
+        d(text=text).click()
+    if (selector == "des"):
+        d(description=text).wait(time)
+        d(description=text).click()
+
+
+
 
 def wait_sendkeys(d, selector, text, keys, time=3):
     if(selector == "id"):
