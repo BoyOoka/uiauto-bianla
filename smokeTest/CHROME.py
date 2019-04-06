@@ -22,6 +22,7 @@ class chrome(unittest.TestCase):
         '''测试2'''
         self.driver.get("https://new.ztestin.com/tasks/index")
 
+
 if __name__ == '__main__':
 
     suite = unittest.TestSuite
