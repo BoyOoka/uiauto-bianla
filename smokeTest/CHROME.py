@@ -29,14 +29,17 @@ class chome(unittest.TestCase):
         self.add_img()
         self.driver.find_element_by_id('su').click()
         self.add_img()
+        self.assertEqual(1, 1, '是否相等')
     def test_case_02(self):
         '''测试2'''
         self.driver.get("https://new.ztestin.com/tasks/index")
+        self.assertEqual(1, 2, '---')
 
 
 if __name__ == '__main__':
     suite = unittest.TestSuite()
     suite.addTest(chome('test_case_01_a'))
+    suite.addTest(chome('test_case_02'))
 
     # suite =  unittest.TestLoader().loadTestsFromTestCase(MyTest)
     # unittest.TextTestRunner(verbosity=2).run(suite)
@@ -44,7 +47,7 @@ if __name__ == '__main__':
     runner = HTMLTestRunner(
         title='测试',
         description='描述',
-        stream = open("./demo.html", "wb"),
+        stream = open("G:/uiauto-bianla/report/demo.html", "wb"),
         verbosity=2,
         retry=0,
         save_last_try=True
